@@ -1,0 +1,21 @@
+{
+  "name": "Export COCO Keypoints",
+  "description": "Converts Supervisely format to COCO Keypoints",
+  "categories": ["images", "export"],
+  "main_script": "src/main.py",
+  "headless": true,
+  "modal_template": "src/modal.html",
+  "docker_image": "supervisely/import-export:0.0.6",
+  "task_location": "workspace_tasks",
+  "modal_template_state": {
+    "allDatasets": true,
+    "datasets": [],
+    "selectedFilter": "all",
+    "selectedOutput": "images"
+  },
+  "context_menu": {
+    "target": ["images_project"],
+    "context_root": "Download as",
+    "context_category": "Export"
+  }
+}

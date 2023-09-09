@@ -1,0 +1,8 @@
+python-dotenv
+supervisely==6.72.122
+
+# formatter
+black
+
+# sorter
+isort
