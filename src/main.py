@@ -88,7 +88,6 @@ class MyExport(sly.app.Export):
             with open(os.path.join(ann_dir, "instances.json"), "w") as file:
                 json.dump(coco_ann, file)
 
-        # TODO: check that all datasets can be uploaded by import app
         return result_dir
 
 
