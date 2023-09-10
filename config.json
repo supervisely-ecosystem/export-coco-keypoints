@@ -14,7 +14,7 @@
     "selectedOutput": "images"
   },
   "context_menu": {
-    "target": ["images_project"],
+    "target": ["images_project", "images_dataset"],
     "context_root": "Download as",
     "context_category": "Export"
   }
