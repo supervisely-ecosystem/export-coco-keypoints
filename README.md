@@ -27,9 +27,10 @@ App converts [Supervisely format](https://docs.supervise.ly/data-organization/00
 
 Application key points:
 
-- Supports **person_keypoints.json** from **COCO** format
 - Сonverts **Supervisely** keypoints to **COCO** keypoints and bboxes.
-- ⚠️ Сonverts all annotations as visible keypoints.
+- ⚠️ Сonverts annotations as visible keypoints (`visibility == 2`).
+- Supports `graph` (`keypoints`) geometry type only. Other geometry types will be ignored.
+- To convert `bitmap`, `polygon` and `rectangles` geometry types use [Export to COCO](https://ecosystem.supervise.ly/apps/export-coco) app or [Export to COCO mask](https://ecosystem.supervise.ly/apps/export-to-coco-mask) for `polygons` geometry type (to preserve holes in polygons).
 
 - Backward compatible with [Import COCO keypoints](https://github.com/supervisely-ecosystem/import-coco-keypoints)
 
