@@ -55,11 +55,7 @@ class MyExport(sly.app.Export):
 
             coco_ann = {}
 
-            ds_progress = sly.Progress(
-                f"Converting dataset: {dataset.name}",
-                total_cnt=len(images),
-                min_report_percent=5,
-            )
+            pbar = sly.Progress(f"Converting dataset: {dataset.name}", total_cnt=len(images))
             for batch in sly.batched(images):
                 image_ids = [image.id for image in batch]
                 ann_infos = api.annotation.download_batch(dataset.id, image_ids)
@@ -82,7 +78,7 @@ class MyExport(sly.app.Export):
                     USER_NAME,
                     batch,
                     anns,
-                    ds_progress,
+                    pbar,
                 )
 
             with open(os.path.join(ann_dir, "instances.json"), "w") as file:
