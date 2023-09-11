@@ -1,12 +1,13 @@
 <div align="center" markdown>
-<!-- <img src="https://user-images.githubusercontent.com/48913536/183899083-64d7683d-57f9-4f7a-b5f4-bf9e7ffd3246.png"/> -->
+<img src="https://github.com/supervisely-ecosystem/export-coco-keypoints/assets/119248312/5777a6fb-efe5-41c3-93b9-4abe92006b77"/>
 
-# Export to COCO Keypoints
+# Export COCO Keypoints
 
 <p align="center">
   <a href="#Overview">Overview</a> •
+  <a href="#How-To-Run">How To Run</a> •
   <a href="#How-To-Use">How To Use</a> •
-  <a href="#Results">Results</a>
+  <a href="#Results">Result</a>
 </p>
 
 [![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/export-coco-keypoints)
@@ -17,13 +18,9 @@
 
 </div>
 
-# export-coco-keypoints
-
-Converts Supervisely to COCO Keypoints format and prepares tar archive for download
-
 # Overview
 
-App converts [Supervisely format](https://docs.supervisely.com/data-organization/00_ann_format_navi) project to [COCO Keypoints format](https://cocodataset.org/#format-data) as a **downloadable .tar archive**
+App converts [Supervisely format](https://docs.supervisely.com/data-organization/00_ann_format_navi) project to [COCO Keypoints format](https://cocodataset.org/#format-data) as a **downloadable .tar archive**.
 
 Application key points:
 
@@ -33,31 +30,39 @@ Application key points:
 
 - Backward compatible with [Import COCO keypoints](https://ecosystem.supervisely.com/apps/import-coco-keypoints)
 
+# How to Run
+
+**•** Go to **Ecosystem** page and find the app [Export COCO Keypoints](https://ecosystem.supervisely.com/apps/export-coco-keypoints).
+
+<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/export-coco-keypoints" img src="XXX" width="500px" style='padding-bottom: 20px'/> 
+
+**•**  Run the application from the **Ecosystem**.
+
+<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+
+**•** Or open the `context menu` of **Images Project** -> `Download via App` -> `Export COCO Keypoints`. 
+
+<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+
+
 # How to Use
 
-1. Add [Export to COCO Keypoints](https://ecosystem.supervisely.com/apps/export-coco-keypoints) to your team from Ecosystem
+Select options in the modal window and press the `RUN` button.
 
-   <!-- <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/export-coco-keypoints" src="" width="350px" style='padding-bottom: 20px'/> -->
+<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
 
-2. Run app from the context menu of **Images Project**:
 
-<!-- <img src="" /> -->
+# Result
 
-3. Select options in the modal window and press the **RUN** button
+After running the application, you will be redirected to the **Workspace Tasks** page. Once application processing has finished, your link for downloading will be available. Click on the `file name` to download it.
 
-<!-- <img src=""/> -->
+<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
 
-# Results
+To explore warnings, just open `Log` in the `⋮` menu:
 
-After running the application, you will be redirected to the `Tasks` page. Once application processing has finished, your link for downloading will be available. Click on the `file name` to download it.
-
-<!-- <img src=""/> -->
-
-To explore warnings just open `Log` in the `⋮` menu:
-
-<!-- <img src=""/> -->
+<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
 
 You can also find your converted project in
 `Team Files` -> `tmp` -> `supervisely` -> `export` -> `export-COCO-keypoints` -> `<taskId>_<projectName>.tar`
 
-<!-- <img src=""/> -->
+<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
