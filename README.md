@@ -38,31 +38,31 @@ Application key points:
 
 **•**  Run the application from the **Ecosystem**.
 
-<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+<img src="XXX" />
 
 **•** Or open the `context menu` of **Images Project** -> `Download via App` -> `Export COCO Keypoints`. 
 
-<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+<img src="XXX" />
 
 
 # How to Use
 
 Select options in the modal window and press the `RUN` button.
 
-<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+<img src="XXX" />
 
 
 # Result
 
 After running the application, you will be redirected to the **Workspace Tasks** page. Once application processing has finished, your link for downloading will be available. Click on the `file name` to download it.
 
-<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+<img src="XXX" />
 
 To explore warnings, just open `Log` in the `⋮` menu:
 
-<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+<img src="XXX" />
 
 You can also find your converted project in
 `Team Files` -> `tmp` -> `supervisely` -> `export` -> `export-COCO-keypoints` -> `<taskId>_<projectName>.tar`
 
-<img src="https://github.com/supervisely-ecosystem/export-to-coco-mask/assets/119248312/155055d6-1b13-4e97-8407-ffaf4f4a4fbc" />
+<img src="XXX" />
