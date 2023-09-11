@@ -23,20 +23,19 @@ Converts Supervisely to COCO Keypoints format and prepares tar archive for downl
 
 # Overview
 
-App converts [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) project to [COCO Keypoints format](https://cocodataset.org/#format-data) as a **downloadable .tar archive**
+App converts [Supervisely format](https://docs.supervisely.com/data-organization/00_ann_format_navi) project to [COCO Keypoints format](https://cocodataset.org/#format-data) as a **downloadable .tar archive**
 
 Application key points:
 
-- Сonverts **Supervisely** keypoints to **COCO** keypoints and bboxes.
+- Сonverts **Supervisely** keypoints (graph) to **COCO** keypoints and bboxes.
 - ⚠️ Сonverts annotations as visible keypoints (`visibility == 2`).
-- Supports `graph` (`keypoints`) geometry type only. Other geometry types will be ignored.
-- To convert `bitmap`, `polygon` and `rectangles` geometry types use [Export to COCO](https://ecosystem.supervise.ly/apps/export-coco) app or [Export to COCO mask](https://ecosystem.supervise.ly/apps/export-to-coco-mask) for `polygons` geometry type (to preserve holes in polygons).
+- Supports `graph` (`keypoints`) geometry type only. **Other geometry types will be ignored.** To convert `bitmap`, `polygon` and `rectangles` geometry types use [Export to COCO](https://ecosystem.supervisely.com/apps/export-to-coco) app or [Export to COCO mask](https://ecosystem.supervisely.com/apps/export-to-coco-mask) for `polygons` geometry type (to preserve holes in polygons).
 
-- Backward compatible with [Import COCO keypoints](https://github.com/supervisely-ecosystem/import-coco-keypoints)
+- Backward compatible with [Import COCO keypoints](https://ecosystem.supervisely.com/apps/import-coco-keypoints)
 
 # How to Use
 
-1. Add [Export to COCO Keypoints](https://ecosystem.supervise.ly/apps/export-coco-keypoints) to your team from Ecosystem
+1. Add [Export to COCO Keypoints](https://ecosystem.supervisely.com/apps/export-coco-keypoints) to your team from Ecosystem
 
    <!-- <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/export-coco-keypoints" src="" width="350px" style='padding-bottom: 20px'/> -->
 
