@@ -1,7 +1,6 @@
 {
   "name": "Export COCO Keypoints",
-  "release": { "version": "v0.0.3", "name": "prep" },
-  "slug": "lisa/export-coco-keypoints",
+  "version": "2.0.0",
   "description": "Converts Supervisely format to COCO Keypoints",
   "categories": ["images", "export"],
   "main_script": "src/main.py",
