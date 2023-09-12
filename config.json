@@ -20,9 +20,6 @@
   },
   "context_menu": {
     "target": ["images_project", "images_dataset"],
-    "context_root": "Download as",
-    "license": {
-      "type": "MIT"
-    }
+    "context_root": "Download as"
   }
 }
