@@ -26,7 +26,7 @@ def check_sly_annotations(ann_info, img_info, meta):
     try:
         ann = sly.Annotation.from_json(ann_info.annotation, meta)
     except:
-        return sly.Annotation(img_info.height, img_info.width)
+        return sly.Annotation((img_info.height, img_info.width))
     new_labels = []
     bad_labels = []
     for lbl in ann.labels:
