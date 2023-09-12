@@ -1,6 +1,6 @@
 {
   "name": "Export COCO Keypoints",
-  "release": { "version":"v0.0.3", "name":"prep" },
+  "release": { "version": "v0.0.3", "name": "prep" },
   "slug": "lisa/export-coco-keypoints",
   "description": "Converts Supervisely format to COCO Keypoints",
   "categories": ["images", "export"],
@@ -22,7 +22,7 @@
     "target": ["images_project", "images_dataset"],
     "context_root": "Download as",
     "license": {
-    "type": "MIT"
+      "type": "MIT"
     }
-    }
+  }
 }
