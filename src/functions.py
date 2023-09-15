@@ -160,7 +160,7 @@ def create_coco_annotation(
                     keypoints.append(nodes[key].location.row)
                     keypoints.append(2)
 
-                if bbox is None:
+                if binding_key is None:
                     bbox = coco_bbox(label)
 
                 x = keypoints[0::3]
