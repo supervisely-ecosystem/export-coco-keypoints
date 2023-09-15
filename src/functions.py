@@ -30,10 +30,10 @@ def check_sly_annotations(ann_info, img_info, meta):
     new_labels = []
     bad_labels = []
     for lbl in ann.labels:
-        if lbl.obj_class.geometry_type != graph.GraphNodes:
-            bad_labels.append(lbl)
-        else:
+        if lbl.obj_class.geometry_type in [graph.GraphNodes, sly.Rectangle]:
             new_labels.append(lbl)
+        else:
+            bad_labels.append(lbl)
 
     if len(bad_labels) > 0:
         sly.logger.warning(
