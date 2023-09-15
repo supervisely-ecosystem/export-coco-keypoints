@@ -143,7 +143,7 @@ def create_coco_annotation(
         for binding_key, labels in groups.items():
             bbox = None
             if binding_key is not None and any(label.obj_class.geometry_type == sly.Rectangle for label in labels):
-                bbox_label = filter(lambda label: label.obj_class.geometry_type == sly.Rectangle, labels)[0]
+                bbox_label = list(filter(lambda label: label.obj_class.geometry_type == sly.Rectangle, labels))[0]
                 bbox = coco_bbox(bbox_label)
             for label in labels:
                 label: sly.Label
