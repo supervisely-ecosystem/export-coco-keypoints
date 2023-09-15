@@ -85,9 +85,12 @@ def get_categories_from_meta(meta: sly.ProjectMeta):
 
 
 def coco_bbox(label):
-    bbox = label.geometry.to_bbox()
-    bbox: sly.Rectangle
-    return [float(bbox.left), float(bbox.top), float(bbox.width), float(bbox.height)]
+    try:
+        bbox = label.geometry.to_bbox()
+        bbox: sly.Rectangle
+        return [float(bbox.left), float(bbox.top), float(bbox.width), float(bbox.height)]
+    except:
+        return []
 
 
 def create_coco_annotation(
@@ -135,55 +138,54 @@ def create_coco_annotation(
             )
         )
 
-        for label in ann.labels:
-            if label.obj_class.geometry_type != graph.GraphNodes:
-                continue
-            label: sly.Label
-            nodes = label.geometry.nodes
-            keypoints = []
-            keypoint_names, sk = get_keypoints_and_skeleton(label.obj_class)
-            for key in keypoint_names:
-                if key not in nodes:
-                    keypoints.extend([0, 0, 0])
+        ann: sly.Annotation
+        groups = ann.get_bindings()
+        for binding_key, labels in groups.items():
+            bbox = None
+            if binding_key is not None and any(label.obj_class.geometry_type == sly.Rectangle for label in labels):
+                bbox_label = filter(lambda label: label.obj_class.geometry_type == sly.Rectangle, labels)[0]
+                bbox = coco_bbox(bbox_label)
+            for label in labels:
+                label: sly.Label
+                if label.obj_class.geometry_type != graph.GraphNodes:
                     continue
-                keypoints.append(nodes[key].location.col)
-                keypoints.append(nodes[key].location.row)
-                keypoints.append(2)
+                nodes = label.geometry.nodes
+                keypoints = []
+                keypoint_names, sk = get_keypoints_and_skeleton(label.obj_class)
+                for key in keypoint_names:
+                    if key not in nodes:
+                        keypoints.extend([0, 0, 0])
+                        continue
+                    keypoints.append(nodes[key].location.col)
+                    keypoints.append(nodes[key].location.row)
+                    keypoints.append(2)
 
-            try:
-                bbox = coco_bbox(label)
-            except:
-                bbox = []
+                if bbox is None:
+                    bbox = coco_bbox(label)
 
-            x = keypoints[0::3]
-            y = keypoints[1::3]
-            x0, x1, y0, y1 = (
-                int(np.min(x)),
-                int(np.max(x)),
-                int(np.min(y)),
-                int(np.max(y)),
-            )
-            # area = 0 if label.geometry == graph.GraphNodes else label.geometry.area
-            area = (x1 - x0) * (y1 - y0)
+                x = keypoints[0::3]
+                y = keypoints[1::3]
+                x0, x1, y0, y1 = (np.min(x), np.max(x), np.min(y), np.max(y))
+                area = int((x1 - x0) * (y1 - y0))
 
-            label_id += 1
-            coco_ann["annotations"].append(
-                dict(
-                    segmentation=[],  # a list of polygon vertices around the object, but can also be a run-length-encoded (RLE) bit mask
-                    area=area,  # Area is measured in pixels (e.g. a 10px by 20px box would have an area of 200)
-                    iscrowd=0,  # Is Crowd specifies whether the segmentation is for a single object or for a group/cluster of objects
-                    image_id=image_info.id,  # The image id corresponds to a specific image in the dataset
-                    bbox=bbox,  # he COCO bounding box format is [top left x position, top left y position, width, height]
-                    category_id=categories_mapping[
-                        label.obj_class.name
-                    ],  # The category id corresponds to a single category specified in the categories section
-                    id=label_id,  # Each annotation also has an id (unique to all other annotations in the dataset)
-                    keypoints=keypoints,  #: [x1,y1,v1,...] length 3k array where k is the total number of keypoints defined for the category. x,y – 0-indexed location; v is a visibility flag (v=0: not labeled, in which case x=y=0; v=1: labeled but not visible; and v=2: labeled and visible).
-                    num_keypoints=len(
-                        keypoint_names
-                    ),  # int, indicates the number of labeled keypoints (v>0) for a given object
+                label_id += 1
+                coco_ann["annotations"].append(
+                    dict(
+                        segmentation=[],  # a list of polygon vertices around the object, but can also be a run-length-encoded (RLE) bit mask
+                        area=area,  # Area is measured in pixels (e.g. a 10px by 20px box would have an area of 200)
+                        iscrowd=0,  # Is Crowd specifies whether the segmentation is for a single object or for a group/cluster of objects
+                        image_id=image_info.id,  # The image id corresponds to a specific image in the dataset
+                        bbox=bbox,  # he COCO bounding box format is [top left x position, top left y position, width, height]
+                        category_id=categories_mapping[
+                            label.obj_class.name
+                        ],  # The category id corresponds to a single category specified in the categories section
+                        id=label_id,  # Each annotation also has an id (unique to all other annotations in the dataset)
+                        keypoints=keypoints,  #: [x1,y1,v1,...] length 3k array where k is the total number of keypoints defined for the category. x,y – 0-indexed location; v is a visibility flag (v=0: not labeled, in which case x=y=0; v=1: labeled but not visible; and v=2: labeled and visible).
+                        num_keypoints=len(
+                            keypoint_names
+                        ),  # int, indicates the number of labeled keypoints (v>0) for a given object
+                    )
                 )
-            )
         progress.iter_done_report()
 
     return coco_ann, label_id
