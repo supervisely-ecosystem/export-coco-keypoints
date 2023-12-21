@@ -2,6 +2,7 @@ import ast
 import json
 import os
 from distutils.util import strtobool
+from supervisely.io.exception_handlers import handle_exception
 
 import supervisely as sly
 from dotenv import load_dotenv
@@ -28,10 +29,7 @@ class MyExport(sly.app.Export):
         if context.dataset_id is not None:
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
         elif len(selected_datasets) > 0 and not all_datasets:
-            datasets = [
-                api.dataset.get_info_by_id(dataset_id)
-                for dataset_id in selected_datasets
-            ]
+            datasets = [api.dataset.get_info_by_id(dataset_id) for dataset_id in selected_datasets]
         else:
             datasets = api.dataset.get_list(project.id)
 
@@ -39,7 +37,6 @@ class MyExport(sly.app.Export):
         categories_mapping = f.get_categories_map_from_meta(project_meta)
 
         result_dir = f.create_project_dir(project)
-
         label_id = 0
         for dataset in datasets:
             img_dir, ann_dir = f.create_coco_dataset(result_dir, dataset.name)
@@ -48,9 +45,7 @@ class MyExport(sly.app.Export):
 
             if selected_filter == "annotated":
                 images = [
-                    image
-                    for image in images
-                    if image.labels_count > 0 or len(image.tags) > 0
+                    image for image in images if image.labels_count > 0 or len(image.tags) > 0
                 ]
 
             coco_ann = {}
@@ -87,5 +82,21 @@ class MyExport(sly.app.Export):
         return result_dir
 
 
-app = MyExport()
-app.run()
+def main():
+    try:
+        app = MyExport()
+        app.run()
+    except Exception as e:
+        exception_handler = handle_exception(e)
+        if exception_handler:
+            raise Exception(exception_handler.get_message_for_modal_window()) from e
+        else:
+            raise e
+    finally:
+        if not sly.is_development():
+            sly.logger.info(f"Remove temp directory: {sly.app.get_data_dir()}")
+            sly.fs.remove_dir(sly.app.get_data_dir())
+
+
+if __name__ == "__main__":
+    sly.main_wrapper("main", main)
