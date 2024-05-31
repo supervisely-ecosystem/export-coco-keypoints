@@ -1,5 +1,5 @@
 python-dotenv
-supervisely==6.72.220
+supervisely==6.73.93
 
 # formatter
 black
