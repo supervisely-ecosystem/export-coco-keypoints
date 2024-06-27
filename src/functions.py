@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import Dict
 import numpy as np
 import supervisely as sly
 from supervisely.geometry import graph
@@ -59,15 +59,20 @@ def get_keypoints_and_skeleton(obj_class):
     edges = obj_class.geometry_config["edges"]
     skeleton = []
     for edge in edges:
-        skeleton.append([nodes.index(edge["src"]) + 1, nodes.index(edge["dst"]) + 1])
+        skeleton.append(
+            [
+                list(nodes.keys()).index(edge["src"]) + 1, 
+                list(nodes.keys()).index(edge["dst"]) + 1,
+            ]
+        )
     return nodes, skeleton
 
 
-def get_nodes_labels(obj_class: sly.ObjClass) -> List[str]:
+def get_nodes_labels(obj_class: sly.ObjClass) -> Dict[str, str]:
     nodes_dict = obj_class.geometry_config["nodes"]
-    nodes = []
-    for node_dict in nodes_dict.values():
-        nodes.append(node_dict["label"])
+    nodes = {}
+    for uuid, node_dict in nodes_dict.items():
+        nodes[uuid] = node_dict["label"]
     return nodes
 
 
@@ -84,7 +89,7 @@ def get_categories_from_meta(meta: sly.ProjectMeta):
                 supercategory=obj_class.name,
                 id=idx + 1,  # supercategory id
                 name=obj_class.name,
-                keypoints=keypoints,  # list[str]
+                keypoints=list(keypoints.values()),  # list[str]
                 skeleton=skeleton,  # list[list[int]]
             )
         )
@@ -163,8 +168,8 @@ def create_coco_annotation(
                     continue
                 nodes = label.geometry.nodes
                 keypoints = []
-                keypoint_names, sk = get_keypoints_and_skeleton(label.obj_class)
-                for key in keypoint_names:
+                keypoint_uuid_labels, sk = get_keypoints_and_skeleton(label.obj_class)
+                for key in keypoint_uuid_labels.keys():
                     if key not in nodes:
                         keypoints.extend([0, 0, 0])
                         continue
@@ -194,7 +199,7 @@ def create_coco_annotation(
                         id=label_id,  # Each annotation also has an id (unique to all other annotations in the dataset)
                         keypoints=keypoints,  #: [x1,y1,v1,...] length 3k array where k is the total number of keypoints defined for the category. x,y – 0-indexed location; v is a visibility flag (v=0: not labeled, in which case x=y=0; v=1: labeled but not visible; and v=2: labeled and visible).
                         num_keypoints=len(
-                            keypoint_names
+                            keypoint_uuid_labels
                         ),  # int, indicates the number of labeled keypoints (v>0) for a given object
                     )
                 )
