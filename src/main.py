@@ -30,11 +30,14 @@ class MyExport(sly.app.Export):
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
             w.workflow_input(api, datasets[0].id, type="dataset")
         elif len(selected_datasets) > 0 and not all_datasets:
-            datasets = [api.dataset.get_info_by_id(dataset_id) for dataset_id in selected_datasets]
-            w.workflow_input(api, project.id, type="project")
+            datasets = [api.dataset.get_info_by_id(dataset_id) for dataset_id in selected_datasets]            
+            if len(datasets) == 1:
+                w.workflow_input(api, datasets[0].id, type="dataset")
+            else:
+                w.workflow_input(api, project.id, type="project")
         else:
             datasets = api.dataset.get_list(project.id)
-            w.workflow_input(api, project.id, type="project")        
+            w.workflow_input(api, project.id, type="project")
 
         project_meta = sly.ProjectMeta.from_json(api.project.get_meta(project.id))
         categories_mapping = f.get_categories_map_from_meta(project_meta)
