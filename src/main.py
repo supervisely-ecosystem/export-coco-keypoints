@@ -8,6 +8,7 @@ import supervisely as sly
 from dotenv import load_dotenv
 
 import functions as f
+import workflow as w
 
 if sly.is_development():
     load_dotenv("local.env")
@@ -20,18 +21,20 @@ selected_filter = os.environ["modal.state.selectedFilter"]
 all_datasets = bool(strtobool(os.getenv("modal.state.allDatasets")))
 selected_datasets = ast.literal_eval(os.environ.get("modal.state.datasets", []))
 
+api = sly.Api.from_env()
 
 class MyExport(sly.app.Export):
     def process(self, context: sly.app.Export.Context):
-        api = sly.Api.from_env()
-
         project = api.project.get_info_by_id(id=context.project_id)
         if context.dataset_id is not None:
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
+            w.workflow_input(api, datasets[0].id, type="dataset")
         elif len(selected_datasets) > 0 and not all_datasets:
             datasets = [api.dataset.get_info_by_id(dataset_id) for dataset_id in selected_datasets]
+            w.workflow_input(api, project.id, type="project")
         else:
             datasets = api.dataset.get_list(project.id)
+            w.workflow_input(api, project.id, type="project")        
 
         project_meta = sly.ProjectMeta.from_json(api.project.get_meta(project.id))
         categories_mapping = f.get_categories_map_from_meta(project_meta)
@@ -86,6 +89,7 @@ def main():
     try:
         app = MyExport()
         app.run()
+        w.workflow_output(api, app.output_file)
     except Exception as e:
         exception_handler = handle_exception(e)
         if exception_handler:
