@@ -10,6 +10,9 @@ from dotenv import load_dotenv
 import functions as f
 import workflow as w
 
+import asyncio
+from tinytimer import Timer
+
 if sly.is_development():
     load_dotenv("local.env")
     load_dotenv(os.path.expanduser("~/supervisely.env"))
@@ -56,15 +59,29 @@ class MyExport(sly.app.Export):
 
             coco_ann = {}
 
+            if selected_output == "images":
+                image_ids = [image_info.id for image_info in images]
+                paths = [os.path.join(img_dir, image_info.name) for image_info in images]
+                if api.server_address.startswith("https://"):
+                    semaphore = asyncio.Semaphore(100)
+                else:
+                    semaphore = None
+
+                with Timer() as t:
+                    coro = api.image.download_paths_async(image_ids, paths, semaphore)
+                    loop = sly.utils.get_or_create_event_loop()
+                    if loop.is_running():
+                        future = asyncio.run_coroutine_threadsafe(coro, loop)
+                        future.result()
+                    else:
+                        loop.run_until_complete(coro)
+                sly.logger.info(
+                    f"Downloading time: {t.elapsed:.4f} seconds per {len(image_ids)} images  ({t.elapsed/len(image_ids):.4f} seconds per image)"
+                )
+
             pbar = sly.Progress(f"Converting dataset: {dataset.name}", total_cnt=len(images))
             for batch in sly.batched(images):
-                image_ids = [image.id for image in batch]
                 ann_infos = api.annotation.download_batch(dataset.id, image_ids)
-                img_paths = [os.path.join(img_dir, img_info.name) for img_info in batch]
-
-                if selected_output == "images":
-                    api.image.download_paths(dataset.id, image_ids, img_paths)
-
                 anns = []
                 for ann_info, img_info in zip(ann_infos, batch):
                     ann = f.check_sly_annotations(ann_info, img_info, project_meta)
