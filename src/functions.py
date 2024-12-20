@@ -1,8 +1,11 @@
 import os
-from typing import Dict
+from typing import Dict, List, Optional, Union, Callable
+import asyncio
 import numpy as np
 import supervisely as sly
 from supervisely.geometry import graph
+from supervisely.api.annotation_api import AnnotationInfo
+from tqdm import tqdm
 
 
 def create_project_dir(project):
@@ -22,7 +25,7 @@ def create_coco_dataset(project_dir, dataset_name):
     return img_dir, ann_dir
 
 
-def check_sly_annotations(ann_info, img_info, meta):
+def check_sly_annotations(ann_info, img_info, meta, unsupported_anns: Dict):
     try:
         ann = sly.Annotation.from_json(ann_info.annotation, meta)
     except:
@@ -36,9 +39,10 @@ def check_sly_annotations(ann_info, img_info, meta):
             bad_labels.append(lbl)
 
     if len(bad_labels) > 0:
-        sly.logger.warning(
-            f"{len(bad_labels)} objects with unsupported geometries in image [ID: {img_info.id}, NAME: {img_info.name}]"
-        )
+        unsupported_anns[img_info.id] = {"name": img_info.name, "count": len(bad_labels)}
+        # sly.logger.warning(
+        #     f"{len(bad_labels)} objects with unsupported geometries in image [ID: {img_info.id}, NAME: {img_info.name}]"
+        # )
     return ann.clone(labels=new_labels)
 
 
@@ -61,7 +65,7 @@ def get_keypoints_and_skeleton(obj_class):
     for edge in edges:
         skeleton.append(
             [
-                list(nodes.keys()).index(edge["src"]) + 1, 
+                list(nodes.keys()).index(edge["src"]) + 1,
                 list(nodes.keys()).index(edge["dst"]) + 1,
             ]
         )
@@ -203,6 +207,32 @@ def create_coco_annotation(
                         ),  # int, indicates the number of labeled keypoints (v>0) for a given object
                     )
                 )
-        progress.iter_done_report()
+        progress(1)
 
     return coco_ann, label_id
+
+
+def get_anns_list(
+    api: sly.Api,
+    dataset_id: int,
+    img_ids: List[int],
+    progress_cb: Optional[Union[tqdm, Callable]] = None,
+) -> List[AnnotationInfo]:
+    async def fetch_annotations():
+        tasks = []
+        for batch in sly.batched(img_ids):
+            task = api.annotation.download_bulk_async(
+                dataset_id=dataset_id, image_ids=batch, progress_cb=progress_cb
+            )
+            tasks.append(task)
+        ann_infos_lists = await asyncio.gather(*tasks)
+        return ann_infos_lists
+
+    loop = sly.utils.get_or_create_event_loop()
+    if loop.is_running():
+        future = asyncio.run_coroutine_threadsafe(fetch_annotations(), loop)
+        ann_infos_lists = future.result()
+    else:
+        ann_infos_lists = loop.run_until_complete(fetch_annotations())
+    ann_infos = [ann_info for ann_infos in ann_infos_lists for ann_info in ann_infos]
+    return ann_infos

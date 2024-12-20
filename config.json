@@ -1,32 +1,26 @@
 {
-  "name": "Export COCO Keypoints",
-  "type": "app",
-  "version": "2.0.0",
-  "description": "Converts Supervisely format to COCO Keypoints",
-  "categories": [
-    "images",
-    "export"
-  ],
-  "main_script": "src/main.py",
-  "headless": true,
-  "icon": "https://github.com/supervisely-ecosystem/export-coco-keypoints/assets/119248312/c915fbea-a418-4e6b-ab74-899bcb6edd3b",
-  "icon_cover": true,
-  "poster": "https://github.com/supervisely-ecosystem/export-coco-keypoints/assets/119248312/5777a6fb-efe5-41c3-93b9-4abe92006b77",
-  "modal_template": "src/modal.html",
-  "docker_image": "supervisely/import-export:6.73.162",
-  "min_instance_version": "6.11.8",
-  "task_location": "workspace_tasks",
-  "modal_template_state": {
-    "allDatasets": true,
-    "datasets": [],
-    "selectedFilter": "all",
-    "selectedOutput": "images"
-  },
-  "context_menu": {
-    "target": [
-      "images_project",
-      "images_dataset"
-    ],
-    "context_root": "Download as"
-  }
+	"name": "Export COCO Keypoints",
+	"type": "app",
+	"version": "2.0.0",
+	"description": "Converts Supervisely format to COCO Keypoints",
+	"categories": ["images", "export"],
+	"main_script": "src/main.py",
+	"headless": true,
+	"icon": "https://github.com/supervisely-ecosystem/export-coco-keypoints/assets/119248312/c915fbea-a418-4e6b-ab74-899bcb6edd3b",
+	"icon_cover": true,
+	"poster": "https://github.com/supervisely-ecosystem/export-coco-keypoints/assets/119248312/5777a6fb-efe5-41c3-93b9-4abe92006b77",
+	"modal_template": "src/modal.html",
+	"docker_image": "supervisely/import-export:6.73.259",
+	"min_instance_version": "6.12.12",
+	"task_location": "workspace_tasks",
+	"modal_template_state": {
+		"allDatasets": true,
+		"datasets": [],
+		"selectedFilter": "all",
+		"selectedOutput": "images"
+	},
+	"context_menu": {
+		"target": ["images_project", "images_dataset"],
+		"context_root": "Download as"
+	}
 }
