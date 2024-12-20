@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 import functions as f
 import workflow as w
 
+import asyncio
+
 if sly.is_development():
     load_dotenv("local.env")
     load_dotenv(os.path.expanduser("~/supervisely.env"))
@@ -23,6 +25,7 @@ selected_datasets = ast.literal_eval(os.environ.get("modal.state.datasets", []))
 
 api = sly.Api.from_env()
 
+
 class MyExport(sly.app.Export):
     def process(self, context: sly.app.Export.Context):
         project = api.project.get_info_by_id(id=context.project_id)
@@ -30,7 +33,7 @@ class MyExport(sly.app.Export):
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
             w.workflow_input(api, datasets[0].id, type="dataset")
         elif len(selected_datasets) > 0 and not all_datasets:
-            datasets = [api.dataset.get_info_by_id(dataset_id) for dataset_id in selected_datasets]            
+            datasets = [api.dataset.get_info_by_id(dataset_id) for dataset_id in selected_datasets]
             if len(datasets) == 1:
                 w.workflow_input(api, datasets[0].id, type="dataset")
             else:
@@ -56,31 +59,50 @@ class MyExport(sly.app.Export):
 
             coco_ann = {}
 
-            pbar = sly.Progress(f"Converting dataset: {dataset.name}", total_cnt=len(images))
-            for batch in sly.batched(images):
-                image_ids = [image.id for image in batch]
-                ann_infos = api.annotation.download_batch(dataset.id, image_ids)
-                img_paths = [os.path.join(img_dir, img_info.name) for img_info in batch]
+            if selected_output == "images":
+                image_ids = [image_info.id for image_info in images]
+                paths = [os.path.join(img_dir, image_info.name) for image_info in images]
 
-                if selected_output == "images":
-                    api.image.download_paths(dataset.id, image_ids, img_paths)
+                di_pbar = sly.tqdm_sly(desc=f"Downloading images", total=len(image_ids))
+                coro = api.image.download_paths_async(image_ids, paths, progress_cb=di_pbar)
+                loop = sly.utils.get_or_create_event_loop()
+                if loop.is_running():
+                    future = asyncio.run_coroutine_threadsafe(coro, loop)
+                    future.result()
+                else:
+                    loop.run_until_complete(coro)
 
-                anns = []
-                for ann_info, img_info in zip(ann_infos, batch):
-                    ann = f.check_sly_annotations(ann_info, img_info, project_meta)
-                    anns.append(ann)
+            da_pbar = sly.tqdm_sly(desc=f"Downloading annotaions", total=len(image_ids))
+            ann_infos = f.get_anns_list(api, dataset.id, image_ids, progress_cb=da_pbar)
+            anns = []
 
-                coco_ann, label_id = f.create_coco_annotation(
-                    coco_ann,
-                    label_id,
-                    project_meta,
-                    dataset,
-                    categories_mapping,
-                    USER_NAME,
-                    batch,
-                    anns,
-                    pbar,
+            pbar = sly.tqdm_sly(desc=f"Converting dataset {dataset.name} items", total=len(images))
+            unsupported_anns = {}
+            for ann_info, img_info in zip(ann_infos, images):
+                ann = f.check_sly_annotations(ann_info, img_info, project_meta, unsupported_anns)
+                anns.append(ann)
+            if unsupported_anns:
+                formatted_message = ", ".join(
+                    [
+                        f"[ID: {img_id}, Name: {info['name']}, Count: {info['count']}]"
+                        for img_id, info in unsupported_anns.items()
+                    ]
                 )
+                sly.logger.warning(
+                    f"Objects with unsupported geometries for images were found. ↙️ Check the following message."
+                )
+                sly.logger.warning(formatted_message)
+            coco_ann, label_id = f.create_coco_annotation(
+                coco_ann,
+                label_id,
+                project_meta,
+                dataset,
+                categories_mapping,
+                USER_NAME,
+                images,
+                anns,
+                pbar,
+            )
 
             with open(os.path.join(ann_dir, "instances.json"), "w") as file:
                 json.dump(coco_ann, file)

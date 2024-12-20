@@ -1,29 +1,28 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Debug",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "env": {
-        "PYTHONPATH": "${workspaceFolder}:${PYTHONPATH}",
-        "ENV": "development"
-      }
-    },
-    {
-      "name": "Advanced debug",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "env": {
-        "PYTHONPATH": "${workspaceFolder}:${PYTHONPATH}",
-        "ENV": "production"
-      }
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Python: main.py",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "src/main.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+				"PYTHONPATH": "${workspaceFolder}:${PYTHONPATH}"
+			}
+		},
+		{
+			"name": "Advanced debug",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+				"PYTHONPATH": "${workspaceFolder}:${PYTHONPATH}",
+				"ENV": "production"
+			}
+		}
+	]
 }
