@@ -89,8 +89,9 @@ class MyExport(sly.app.Export):
                     ]
                 )
                 sly.logger.warning(
-                    f"Objects with unsupported geometries for images were found: {formatted_message}"
+                    f"Objects with unsupported geometries for images were found. ↙️ Check the following message."
                 )
+                sly.logger.warning(formatted_message)
             coco_ann, label_id = f.create_coco_annotation(
                 coco_ann,
                 label_id,
