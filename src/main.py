@@ -82,8 +82,14 @@ class MyExport(sly.app.Export):
                 ann = f.check_sly_annotations(ann_info, img_info, project_meta, unsupported_anns)
                 anns.append(ann)
             if unsupported_anns:
+                formatted_message = ", ".join(
+                    [
+                        f"[ID: {img_id}, Name: {info['name']}, Count: {info['count']}]"
+                        for img_id, info in unsupported_anns.items()
+                    ]
+                )
                 sly.logger.warning(
-                    f"Objects with unsupported geometries for images were found: {json.dumps(unsupported_anns, indent=2)}"
+                    f"Objects with unsupported geometries for images were found: {formatted_message}"
                 )
             coco_ann, label_id = f.create_coco_annotation(
                 coco_ann,
