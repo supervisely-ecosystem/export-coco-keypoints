@@ -56,11 +56,10 @@ class MyExport(sly.app.Export):
                 images = [
                     image for image in images if image.labels_count > 0 or len(image.tags) > 0
                 ]
-
+            image_ids = [image_info.id for image_info in images]
             coco_ann = {}
 
             if selected_output == "images":
-                image_ids = [image_info.id for image_info in images]
                 paths = [os.path.join(img_dir, image_info.name) for image_info in images]
 
                 di_pbar = sly.tqdm_sly(desc=f"Downloading images", total=len(image_ids))
