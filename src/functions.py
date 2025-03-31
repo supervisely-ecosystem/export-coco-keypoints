@@ -120,6 +120,7 @@ def create_coco_annotation(
     image_infos,
     anns,
     progress,
+    export_invisible=False,
 ):
     if len(coco_ann) == 0:
         coco_ann = dict(
@@ -177,9 +178,12 @@ def create_coco_annotation(
                     if key not in nodes:
                         keypoints.extend([0, 0, 0])
                         continue
+                    v = 2
+                    if nodes[key].disabled and export_invisible:
+                        v = 1
                     keypoints.append(nodes[key].location.col)
                     keypoints.append(nodes[key].location.row)
-                    keypoints.append(2)
+                    keypoints.append(v)
 
                 if binding_key is None:
                     bbox = coco_bbox(label)

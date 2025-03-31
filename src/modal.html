@@ -58,6 +58,16 @@
         </el-radio-group>
       </div>
     </sly-field>
+    <sly-field
+      title="Handle invisible keypoints"
+      description="If you have invisible keypoints in your dataset, you can choose whether to export them as visible (2) or invisible keypoints (1)."
+    >
+      <div>
+        <el-checkbox v-model="state.exportInvisible">
+            <span>Export as invisible keypoints</span>
+        </el-checkbox>
+      </div>
+    </sly-field>
   </div>
   <div>
     <sly-notification-2 class="mt10" :options="{'type': 'info'}">

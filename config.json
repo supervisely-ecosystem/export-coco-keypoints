@@ -17,7 +17,8 @@
 		"allDatasets": true,
 		"datasets": [],
 		"selectedFilter": "all",
-		"selectedOutput": "images"
+		"selectedOutput": "images",
+        "exportInvisible": false
 	},
 	"context_menu": {
 		"target": ["images_project", "images_dataset"],

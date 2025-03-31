@@ -22,6 +22,7 @@ selected_output = os.environ["modal.state.selectedOutput"]
 selected_filter = os.environ["modal.state.selectedFilter"]
 all_datasets = bool(strtobool(os.getenv("modal.state.allDatasets")))
 selected_datasets = ast.literal_eval(os.environ.get("modal.state.datasets", []))
+export_invisible = bool(strtobool(os.getenv("modal.state.exportInvisible", "false")))
 
 api = sly.Api.from_env()
 
@@ -101,6 +102,7 @@ class MyExport(sly.app.Export):
                 images,
                 anns,
                 pbar,
+                export_invisible,
             )
 
             with open(os.path.join(ann_dir, "instances.json"), "w") as file:
