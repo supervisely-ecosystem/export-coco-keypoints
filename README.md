@@ -10,7 +10,7 @@
   <a href="#Results">Result</a>
 </p>
 
-[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/export-coco-keypoints)
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](../../../../supervisely-ecosystem/export-coco-keypoints)
 [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/export-coco-keypoints)
 [![views](https://app.supervise.ly/img/badges/views/supervisely-ecosystem/export-coco-keypoints.png)](https://supervise.ly)
@@ -26,13 +26,13 @@ Application key points:
 
 - Сonverts **Supervisely** keypoints (graph) to **COCO** keypoints and bboxes.
 - ⚠️ Сonverts annotations as visible keypoints (`visibility == 2`).
-- Supports `graph` (`keypoints`) geometry type only. **Other geometry types will be ignored.** To convert `bitmap`, `polygon` and `rectangles` geometry types use [Export to COCO](https://ecosystem.supervisely.com/apps/export-to-coco) app or [Export to COCO mask](https://ecosystem.supervisely.com/apps/export-to-coco-mask) for `polygons` geometry type (to preserve holes in polygons).
+- Supports `graph` (`keypoints`) geometry type only. **Other geometry types will be ignored.** To convert `bitmap`, `polygon` and `rectangles` geometry types use [Export to COCO](../../../../supervisely-ecosystem/export-to-coco) app or [Export to COCO mask](../../../../supervisely-ecosystem/export-to-coco-mask) for `polygons` geometry type (to preserve holes in polygons).
 
-- Backward compatible with [Import COCO keypoints](https://ecosystem.supervisely.com/apps/import-coco-keypoints)
+- Backward compatible with [Import COCO keypoints](../../../../supervisely-ecosystem/import-coco-keypoints)
 
 # How to Run
 
-**•** Go to **Ecosystem** page and find the app [Export COCO Keypoints](https://ecosystem.supervisely.com/apps/export-coco-keypoints).
+**•** Go to **Ecosystem** page and find the app [Export COCO Keypoints](../../../../supervisely-ecosystem/export-coco-keypoints).
 
 <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/export-coco-keypoints" img src="https://github.com/supervisely-ecosystem/export-coco-keypoints/assets/115161827/0c39d58f-a3b1-4060-b2ff-b7db7309ccf1" width="500px" style='padding-bottom: 20px'/> 
 
